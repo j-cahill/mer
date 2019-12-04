@@ -12,4 +12,4 @@ def extract_rhythmic_features(signal, sr):
 
     all_features = np.concatenate([rhythm_hist, rhythm_mean])
 
-    return
+    return all_features
