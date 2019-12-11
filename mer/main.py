@@ -6,9 +6,9 @@ import tqdm
 import numpy as np
 import pandas as pd
 
-from feature_extract.feature_extract import extract_feature_vector
-from learn_kde_audio import map_factor_learn, emotion_space_map
-from recommend import recommend_songs
+from mer.feature_extract.feature_extract import extract_feature_vector
+from mer.learn_kde_audio import map_factor_learn, emotion_space_map
+from mer.recommend import recommend_songs
 
 
 def main(song_path, train_audio, train_pdfs, num_rec=5):
@@ -60,9 +60,9 @@ def make_train(train_audio_dir):
 
 
 if __name__ == "__main__":
-    song_path = Path.cwd()/ 'data' / 'raw' / 'clips_45seconds' / '669.mp3'
-    train_audio = pd.read_csv(Path.cwd() / 'data' / 'interim' / 'audio_feature_sample_50.csv', index_col=0)
-    train_pdfs = pd.read_csv(Path.cwd() / 'data' / 'final' / 'Time_Average_Gamma_0_1.csv',
+    song_path = Path.cwd().parent / 'data' / 'raw' / 'clips_45seconds' / '669.mp3'
+    train_audio = pd.read_csv(Path.cwd().parent / 'data' / 'interim' / 'audio_feature_sample_50.csv', index_col=0)
+    train_pdfs = pd.read_csv(Path.cwd().parent / 'data' / 'final' / 'Time_Average_Gamma_0_1.csv',
                              index_col='song_id')
 
     print(main(song_path, train_audio.values, train_pdfs.iloc[:50, :]))
