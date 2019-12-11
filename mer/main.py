@@ -11,7 +11,7 @@ from learn_kde_audio import map_factor_learn, emotion_space_map
 from recommend import recommend_songs
 
 
-def main(song_path, train_audio, train_pdfs, num_songs=5):
+def main(song_path, train_audio, train_pdfs, num_rec=5):
     """Performs all needed actions for the project when a new song is uploaded
 
     1. Performs feature extraction and dimensionality reduction on the new song
@@ -30,18 +30,18 @@ def main(song_path, train_audio, train_pdfs, num_songs=5):
     # 2
     map_factor = map_factor_learn(train_audio, all_features)
 
-    # 3 - TODO
-    song_pdf = emotion_space_map(train_pdfs, map_factor)
+    # 3
+    song_pdf = emotion_space_map(train_pdfs.values, map_factor)
 
-    # 4 - TODO
-    # recommend = recommend_songs(song_pdf, train_pdfs, num_songs=num_songs)
+    # 4
+    recommend = recommend_songs(song_pdf, train_pdfs, num_rec=num_rec)
 
-    return song_pdf # will change to the recommended one
+    return recommend
 
 
 def make_train(train_audio_dir):
     """Make the training data for our existing audio"""
-    all_mp3_paths = list(train_audio_dir.glob('**/*.mp3'))[:50] # just 50 for now to test
+    all_mp3_paths = list(train_audio_dir.glob('**/*.mp3'))[:50]  # just 50 for now to test
 
     audio_train = []
     song_id = []
@@ -65,6 +65,6 @@ if __name__ == "__main__":
     train_pdfs = pd.read_csv(Path.cwd() / 'data' / 'final' / 'Time_Average_Gamma_0_1.csv',
                              index_col='song_id')
 
-    main(song_path, train_audio.values, train_pdfs.values[:50, :])
+    print(main(song_path, train_audio.values, train_pdfs.iloc[:50, :]))
     # audio_train = make_train(song_path.parent)
     # audio_train.to_csv(Path.cwd() / 'data' / 'interim' / 'audio_feature_sample_50.csv')
