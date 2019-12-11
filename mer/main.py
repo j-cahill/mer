@@ -18,6 +18,15 @@ def main(song_path, train_audio, train_pdfs, num_rec=5):
     2. Learns mapping factors from the training audio features and new song audio features
     3. Performs emotion space mapping with training PDFs and mapping factors
     4. Performs recommendation by comparing new PDF to all existing PDFs based on euclidean distance
+
+    :argument song_path: The path to the song's audio file. Can be of type str or pathlib.Path
+    :argument train_audio: Numpy array of training data audio features.  Must have the same number of samples as
+    train_pdfs
+    :argument train_pdfs: Pandas dataframe of training PDFs with index 'song_id'. Must have the same number of samples
+    as train_audio
+    :argument num_rec: Number of recommendations to return, default=5
+
+    returns: list of song id's of our top (num_rec) recommendations
     """
 
     with warnings.catch_warnings():
@@ -39,9 +48,10 @@ def main(song_path, train_audio, train_pdfs, num_rec=5):
     return recommend
 
 
-def make_train(train_audio_dir):
+def make_train(train_audio_dir, song_ids):
     """Make the training data for our existing audio"""
-    all_mp3_paths = list(train_audio_dir.glob('**/*.mp3'))[:50]  # just 50 for now to test
+    all_mp3_paths = list(train_audio_dir.glob('**/*.mp3'))#[:50]  # just 50 for now to test
+    all_mp3_paths = [x for x in train_audio_dir.glob('**/*.mp3') if int(x.parts[-1][:-4]) in song_ids]
 
     audio_train = []
     song_id = []
@@ -66,5 +76,5 @@ if __name__ == "__main__":
                              index_col='song_id')
 
     print(main(song_path, train_audio.values, train_pdfs.iloc[:50, :]))
-    # audio_train = make_train(song_path.parent)
+    # audio_train = make_train(song_path.parent, train_pdfs.index.tolist())
     # audio_train.to_csv(Path.cwd() / 'data' / 'interim' / 'audio_feature_sample_50.csv')
