@@ -1,11 +1,20 @@
-from setuptools import setup
+from setuptools import setup, find_packages
 
-setup(name='funniest',
+setup(name='mer',
       version='0.1',
-      description='The funniest joke in the world',
+      description='Music Emotion Recognition',
       url='http://github.com/j-cahill/mer',
-      author='Jesse Cahill Zile Wang, Zhongling',
-      author_email='flyingcircus@example.com',
+      author='Jesse Cahill, Zile Wang, Zhongling Jiang',
+      author_email='jcahill225@gmail.com',
       license='MIT',
-      packages=['funniest'],
+      packages=find_packages(),
+      python_requires='>=3.6, <3.8',
+      install_requires=[
+            'numpy',
+            'scikit-learn',
+            'pandas',
+            'tqdm',
+            'librosa',
+            'future'
+      ],
       zip_safe=False)
