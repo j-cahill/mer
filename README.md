@@ -1,18 +1,12 @@
 - \__init__.py
-
 - setup.py
-
 - README.md
-
 - .gitignore
-
 - requirements.txt
-
 - **libs**
 
   - \__init__.py
   - **rp_extract**
-
 - **feature_extract**
 
   - \__init__.py
@@ -20,13 +14,8 @@
   - spectral.py
   - temporal.py
   - rhythmic.py
-  - extract_all.py
-
-- estimate_kde.py (estimates KDE based on VA data, used for training data only)
-
-- map_factor_learn.py (Learns mapping factors based on training data and audio features)
-
-- emo_space_map.py (Learns KDE based on mapping factor and training KDE's)
+  - feature_extract.py
+- learn_kde_audio.py (Functions for mapping factor learning and emotion space mapping)
 
 
 Steps this package needs to help us accomplish

@@ -1,3 +1,5 @@
+import warnings
+
 import numpy as np
 import librosa
 
@@ -16,7 +18,9 @@ def temporal_centroid(envelope, sr):
     onset_strength = librosa.onset.onset_strength(y=envelope, sr=sr)
 
     try:
-        temporal_centroid = sum(onset_strength * times) / sum(onset_strength)
+        with warnings.catch_warnings():
+            warnings.simplefilter('ignore')
+            temporal_centroid = sum(onset_strength * times) / sum(onset_strength)
     except RuntimeWarning:
         temporal_centroid = np.nan
 

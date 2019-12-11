@@ -21,7 +21,7 @@ def map_factor_learn(train_audio, test_audio, n_neighbors=4):
 
     _, indices = nbrs.kneighbors(test_scale)
 
-    map_fac = np.zeros(train_audio.shape[1])
+    map_fac = np.zeros(train_audio.shape[0])
     map_fac[indices] = 1
 
     return map_fac
