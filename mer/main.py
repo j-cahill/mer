@@ -29,6 +29,9 @@ def main(song_path, train_audio, train_pdfs, num_rec=5):
     returns: list of song id's of our top (num_rec) recommendations
     """
 
+    train_pdfs.sort_index(inplace=True)
+    train_audio.sort_index(inplace=True)
+
     with warnings.catch_warnings():
         warnings.simplefilter('ignore')
         signal, sr = librosa.load(str(song_path))
@@ -37,7 +40,7 @@ def main(song_path, train_audio, train_pdfs, num_rec=5):
     all_features = extract_feature_vector(signal, sr)
 
     # 2
-    map_factor = map_factor_learn(train_audio, all_features)
+    map_factor = map_factor_learn(train_audio.values, all_features)
 
     # 3
     song_pdf = emotion_space_map(train_pdfs.values, map_factor)
@@ -50,7 +53,7 @@ def main(song_path, train_audio, train_pdfs, num_rec=5):
 
 def make_train(train_audio_dir, song_ids):
     """Make the training data for our existing audio"""
-    all_mp3_paths = list(train_audio_dir.glob('**/*.mp3'))#[:50]  # just 50 for now to test
+    # all_mp3_paths = list(train_audio_dir.glob('**/*.mp3'))[:5]  # just 50 for now to test
     all_mp3_paths = [x for x in train_audio_dir.glob('**/*.mp3') if int(x.parts[-1][:-4]) in song_ids]
 
     audio_train = []
@@ -64,17 +67,18 @@ def make_train(train_audio_dir, song_ids):
         song_features = extract_feature_vector(signal, sr)
         audio_train.append(song_features)
 
-    audio_train = pd.DataFrame(np.array(audio_train), index=song_id)
+    audio_train = pd.DataFrame(np.array(audio_train), index=song_id) \
+        .sort_index()
 
     return audio_train
 
 
 if __name__ == "__main__":
     song_path = Path.cwd().parent / 'data' / 'raw' / 'clips_45seconds' / '669.mp3'
-    train_audio = pd.read_csv(Path.cwd().parent / 'data' / 'interim' / 'audio_feature_sample_50.csv', index_col=0)
+    train_audio = pd.read_csv(Path.cwd().parent / 'data' / 'final' / 'audio_feature_71_train.csv', index_col=0)
     train_pdfs = pd.read_csv(Path.cwd().parent / 'data' / 'final' / 'Time_Average_Gamma_0_1.csv',
                              index_col='song_id')
 
-    print(main(song_path, train_audio.values, train_pdfs.iloc[:50, :]))
+    print(main(song_path, train_audio, train_pdfs))
     # audio_train = make_train(song_path.parent, train_pdfs.index.tolist())
-    # audio_train.to_csv(Path.cwd() / 'data' / 'interim' / 'audio_feature_sample_50.csv')
+    # audio_train.to_csv(Path.cwd().parent / 'data' / 'final' / 'audio_feature_train.csv')
