@@ -79,6 +79,7 @@ if __name__ == "__main__":
     train_pdfs = pd.read_csv(Path.cwd().parent / 'data' / 'final' / 'Time_Average_Gamma_0_1.csv',
                              index_col='song_id')
 
-    print(main(song_path, train_audio, train_pdfs))
-    # audio_train = make_train(song_path.parent, train_pdfs.index.tolist())
+    # print(main(song_path, train_audio, train_pdfs))
+    audio_train = make_train(song_path.parent, train_pdfs.index.tolist())
+    print(audio_train.shape)
     # audio_train.to_csv(Path.cwd().parent / 'data' / 'final' / 'audio_feature_train.csv')
