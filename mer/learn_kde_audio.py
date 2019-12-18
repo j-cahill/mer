@@ -43,3 +43,24 @@ def emotion_space_map(train_pdfs, map_factor):
 
     return new_pdf
 
+
+def rescale_pdf_vals(num):
+    """ Rescales the empirical pdf to be within the range of -1 to 1
+
+    Assumes a 16x16 pdf
+    """
+
+    num_rescale = 2 * (num - 0) / 16 - 1
+    return num_rescale
+
+
+def get_va_vals(pdf):
+    """ Get the mean VA values of the PDF
+    :argument pdf: a 256x1 numpy array representation of an array
+    """
+    pdf_square = pdf.reshape(16, 16)
+    argmax = np.unravel_index(pdf_square.argmax(), pdf_square.shape)
+
+    arousal, valence = rescale_pdf_vals(argmax[0]), rescale_pdf_vals(argmax[1])
+
+    return arousal, valence
