@@ -7,9 +7,8 @@ import numpy as np
 import pandas as pd
 
 from mer.feature_extract.feature_extract import extract_feature_vector
-from mer.learn_kde_audio import map_factor_learn, emotion_space_map
+from mer.learn_kde_audio import map_factor_learn, emotion_space_map, plot_pdf
 from mer.recommend import recommend_songs
-from mer.learn_kde_audio import get_va_vals
 
 
 # Steps to perform
@@ -80,16 +79,14 @@ def make_train(train_audio_dir, song_ids):
 
 
 if __name__ == "__main__":
-    song_path = Path.cwd().parent / 'data' / 'raw' / 'clips_45seconds' / '123.mp3'
+    song_path = Path.cwd().parent / 'data' / 'raw' / 'clips_45seconds' / '4.mp3'
     train_audio = pd.read_csv(Path.cwd().parent / 'data' / 'final' / 'all_songs_all_135_features.csv', index_col=0)
     train_pdfs = pd.read_csv(Path.cwd().parent / 'data' / 'final' / 'Time_Average_Gamma_0_1.csv',
                              index_col='song_id')
 
     recommend, song_pdf = main(song_path, train_audio, train_pdfs)
-    print(get_va_vals(song_pdf))
-    for key in recommend:
-        pdf_rec = train_pdfs.loc[key]
-        print(get_va_vals(pdf_rec.values))
+    plot_pdf(song_pdf)
+
     # audio_train = make_train(song_path.parent, train_pdfs.index.tolist())
     # print(audio_train.shape)
     # audio_train.to_csv(Path.cwd().parent / 'data' / 'final' / 'audio_feature_train.csv')

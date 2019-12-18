@@ -1,4 +1,7 @@
 import numpy as np
+import matplotlib
+import matplotlib.pyplot as plt
+
 from sklearn.neighbors import NearestNeighbors
 from sklearn.preprocessing import StandardScaler
 
@@ -44,6 +47,34 @@ def emotion_space_map(train_pdfs, map_factor):
     return new_pdf
 
 
+def plot_pdf(pdf):
+    """ Plots a heatmap of the pdf in the VA space"""
+    pdf_square = pdf.reshape(16, 16)
+    val = np.round(np.linspace(-1, 1, 16), 2)
+    ar = np.round(np.linspace(1, -1, 16), 2)
+
+    fig, ax = plt.subplots()
+    im = ax.imshow(pdf_square)
+
+    # We want to show all ticks...
+    ax.set_xticks(np.arange(len(val)))
+    ax.set_yticks(np.arange(len(ar)))
+    # ... and label them with the respective list entries
+    ax.set_xticklabels(val)
+    ax.set_yticklabels(ar)
+
+    # Rotate the tick labels and set their alignment.
+    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+             rotation_mode="anchor")
+
+    ax.set_title("Emotion Map of Uploaded Song")
+    ax.set_xlabel('Valence')
+    ax.set_ylabel('Arousal')
+
+    fig.tight_layout()
+    plt.show()
+
+
 def rescale_pdf_vals(num):
     """ Rescales the empirical pdf to be within the range of -1 to 1
 
@@ -59,8 +90,25 @@ def get_va_vals(pdf):
     :argument pdf: a 256x1 numpy array representation of an array
     """
     pdf_square = pdf.reshape(16, 16)
-    argmax = np.unravel_index(pdf_square.argmax(), pdf_square.shape)
 
-    arousal, valence = rescale_pdf_vals(argmax[0]), rescale_pdf_vals(argmax[1])
+    arousal_eval = 0
+    valence_eval = 0
+    # for i in range(16):
+    #     for j in range(16):
+    #         arousal_eval += (i + 1) * pdf_square[i,j]
+    #         valence_eval += (j + 1) * pdf_square[i,j]
+    # argmax_eval = arousal_eval, valence_eval
 
-    return arousal, valence
+    arousal_pdf = np.sum(pdf_square, axis=1).tolist()
+    valence_pdf = np.sum(pdf_square, axis=0).tolist()
+    arousal_eval = sum([x*arousal_prob for (x, arousal_prob) in zip(range(16), arousal_pdf)])
+    valence_eval = sum([x*valence_prob for (x, valence_prob) in zip(range(16), valence_pdf)])
+    argmax_eval = (arousal_eval, valence_eval)
+
+    argmax_pdf = np.unravel_index(pdf_square.argmax(), pdf_square.shape)
+
+    arousal_eval, valence_eval = rescale_pdf_vals(argmax_eval[0]), rescale_pdf_vals(argmax_eval[1])
+    arousal_pdf, valence_pdf = rescale_pdf_vals(argmax_pdf[0]), rescale_pdf_vals(argmax_pdf[1])
+
+    return argmax_eval
+    # return argmax_pdf
