@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.com/j-cahill/mer.svg?branch=master)](https://travis-ci.com/j-cahill/mer)
+
+
 - \__init__.py
 - setup.py
 - README.md
