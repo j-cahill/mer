@@ -16,7 +16,7 @@ from mer.recommend import recommend_songs
 # 2. function to extract -1 to 1 VA coordinates from pdf
 # 3. generate VA plot figure using matplotlib ( separate code )
 
-def main(song_path, train_audio, train_pdfs, num_rec=5):
+def mer(song_path, train_audio, train_pdfs, num_rec=5):
     """Performs all needed actions for the project when a new song is uploaded
 
     1. Performs feature extraction and dimensionality reduction on the new song
@@ -84,7 +84,7 @@ if __name__ == "__main__":
     train_pdfs = pd.read_csv(Path.cwd().parent / 'data' / 'final' / 'Time_Average_Gamma_0_1.csv',
                              index_col='song_id')
 
-    recommend, song_pdf = main(song_path, train_audio, train_pdfs)
+    recommend, song_pdf = mer(song_path, train_audio, train_pdfs)
     plot_pdf(song_pdf)
 
     # audio_train = make_train(song_path.parent, train_pdfs.index.tolist())
